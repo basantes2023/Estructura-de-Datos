@@ -1,0 +1,248 @@
+Resolver 5 ejercicios a elección utilizando C#
+Ejercicio 3
+Escribir un programa que almacene las asignaturas de un curso (por ejemplo Matemáticas, Física, Química, Historia y Lengua) en una lista, pregunte al usuario la nota que ha sacado en cada asignatura, y después las muestre por pantalla con el mensaje En <asignatura> has sacado <nota> donde <asignatura> es cada una de las asignaturas de la lista y <nota> cada una de las correspondientes notas introducidas por el usuario.
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // Definir las asignaturas del curso en una lista
+       List<string> asignaturas = new List<string> { "Matematicas", "Fisica", "Quimica", "Historia", "Lengua" };
+
+        // Lista de tuplas para almacenar las asignaturas y sus notas
+        List<(string, double)> asignaturasNotas = new List<(string, double)>();
+        // Pedir al usuario la nota de cada asignatura
+        foreach (string asignatura in asignaturas)
+        {
+            Console.Write($"Que nota has sacado en {asignatura}?: ");
+            string input = Console.ReadLine();
+
+            // Convertir la entrada a double (nota)
+            if (double.TryParse(input, out double nota))
+            {
+                // Agregar la tupla (asignatura, nota) a la lista
+                asignaturasNotas.Add((asignatura, nota));
+            }
+            else
+            {
+                Console.WriteLine("¡Ingrese un valor numerico valido!");
+                // Como no se ingreso una nota valida, agregar un valor indicativo
+                asignaturasNotas.Add((asignatura, -1)); // Podría ser cualquier valor que indique un error
+            }
+        }
+        // Mostrar las asignaturas con sus respectivas notas
+        Console.WriteLine("\nNotas por asignatura:");
+        foreach (var (asignatura, nota) in asignaturasNotas)
+        {
+            Console.WriteLine($"En {asignatura} has sacado: {nota}");
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////
+Ejercicio 4
+Escribir un programa que pregunte al usuario los números ganadores de la lotería primitiva, los almacene en una lista y los muestre por pantalla ordenados de menor a mayor.
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // Crear una lista para almacenar los numeros ganadores
+        List<int> numerosGanadores = new List<int>();
+
+        // Pedir al usuario que ingrese los numeros ganadores
+        Console.WriteLine("Ingrese los numeros ganadores de la loteria primitiva (ingrese '0' para terminar):");
+
+        int numero;
+        do
+        {
+            // Pedir al usuario que ingrese un numero
+            Console.Write(" Introduce numero ganador (o '0' para terminar): ");
+            if (int.TryParse(Console.ReadLine(), out numero))
+            {
+                if (numero != 0)
+                {
+                    numerosGanadores.Add(numero); // Agregar el numero a la lista si no es 0
+                }
+            }
+            else
+            {
+                Console.WriteLine("Numero invalido. Por favor, ingrese un numero entero valido.");
+            }
+
+        } while (numero != 0);
+
+        // Ordenar la lista de numeros ganadores de menor a mayor
+        numerosGanadores.Sort();
+
+        // Mostrar los numeros ganadores ordenados
+        Console.WriteLine("\n Los numeros ganadores son:");
+        foreach (int num in numerosGanadores)
+        {
+            Console.WriteLine(num);
+        }
+    }
+}
+
+///////////////////////////////
+Ejercicio 6
+Escribir un programa que almacene las asignaturas de un curso (por ejemplo Matemáticas, Física, Química, Historia y Lengua) en una lista, pregunte al usuario la nota que ha sacado en cada asignatura y elimine de la lista las asignaturas aprobadas. Al final el programa debe mostrar por pantalla las asignaturas que el usuario tiene que repetir.
+using System;
+using System.Collections.Generic;
+class Program
+{
+    static void Main()
+    {
+        // Definir las asignaturas del curso en una lista
+        List<string> asignaturas = new List<string>
+        {
+            "Matematicas", "Fisica", "Quimica", "Historia", "Lengua"
+        };
+        // Crear una lista para almacenar las asignaturas a repetir
+        List<string> asignaturasARepetir = new List<string>();
+
+        // Preguntar la nota de cada asignatura al usuario y eliminar las aprobadas
+        foreach (string asignatura in asignaturas)
+        {
+            Console.Write($"Que nota ha sacado en {asignatura}?: ");
+            int nota;
+            while (!int.TryParse(Console.ReadLine(), out nota) || nota < 0 || nota > 10)
+            {
+                Console.Write("Ingrese una nota valida (entre 0 y 10): ");
+            }
+            if (nota < 7)
+            {
+                asignaturasARepetir.Add(asignatura);
+            }
+        }
+        // Mostrar las asignaturas a repetir por pantalla
+        Console.WriteLine("\nTienes que repetir :");
+        foreach (string asignatura in asignaturasARepetir)
+        {
+            Console.WriteLine(asignatura);
+        }
+    }
+}
+
+////////////////////////////////////////////////////////
+Ejercicio 9
+Escribir un programa que pida al usuario una palabra y muestre por pantalla el número de veces que contiene cada vocal.
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Ingresa palabras, oraciones, frases, para contar las vocales:");
+        string palabra = Console.ReadLine().ToLower(); // Convertir la palabra a minusculas para simplificar la comparacion
+
+        // Definir una lista de vocales
+        List<char> vocales = new List<char> { 'a', 'e', 'i', 'o', 'u' };
+
+        // Definir una lista para contar las ocurrencias de cada vocal
+        List<int> conteoVocales = new List<int> { 0, 0, 0, 0, 0 }; // Índice 0: 'a', 1: 'e', 2: 'i', 3: 'o', 4: 'u'
+
+        // Recorrer la palabra para contar las vocales
+        foreach (char letra in palabra)
+        {
+            // Verificar si la letra es una vocal
+            if (vocales.Contains(letra))
+            {
+                // Incrementar el contador correspondiente
+                int indice = vocales.IndexOf(letra);
+                conteoVocales[indice]++;
+            }
+        }
+
+        // Mostrar los resultados
+        Console.WriteLine("\nNumero de veces que aparece cada vocal en la palabra:");
+
+        for (int i = 0; i < vocales.Count; i++)
+        {
+            Console.WriteLine($"-  La vocal '{vocales[i]}'aparece: {conteoVocales[i]}");
+        }
+    }
+}
+
+///////////////////////////////////////////
+Ejercicio 13
+Escribir un programa que pregunte por una muestra de números, separados por comas, los guarde en una lista y muestre por pantalla su media y desviación típica.
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        // Pedir al usuario que ingrese una muestra de 5 numeros separados por comas
+        Console.WriteLine("Ingrese una muestra de 5 numeros separados por comas:");
+
+        // Leer la entrada del usuario
+        string input = Console.ReadLine();
+
+        // Convertir la entrada en una lista de números
+        List<double> numeros = ParsearListaNumeros(input);
+
+        // Verificar si se obtuvieron exactamente 5 numeros validos
+        if (numeros.Count != 5)
+        {
+            Console.WriteLine("Debe ingresar exactamente 5 numeros separados por comas.");
+            return;
+        }
+
+        // Calcular la media de los numeros
+        double media = CalcularMedia(numeros);
+
+        // Calcular la desviacion estandar de los numeros
+        double desviacion = CalcularDesviacionEstandar(numeros, media);
+
+        // Mostrar los resultados por pantalla
+        Console.WriteLine($"La media es: {media}");
+        Console.WriteLine($"Desviacion tipica: {desviacion}");
+    }
+    // Metodo para convertir una cadena de entrada en una lista de numeros
+    static List<double> ParsearListaNumeros(string input)
+    {
+        List<double> numeros = new List<double>();
+        try
+        {
+            // Separar la cadena por comas y convertir cada parte a double
+            string[] partes = input.Split(',');
+            foreach (string parte in partes)
+            {
+                double numero = double.Parse(parte.Trim());
+                numeros.Add(numero);
+            }
+        }
+        catch (FormatException)
+        {
+            // Si hay un error al convertir algun numero, devolver una lista vacía
+            numeros.Clear();
+        }
+
+        return numeros;
+    }
+    // Metodo para calcular la media de una lista de numeros
+    static double CalcularMedia(List<double> numeros)
+    {
+        return numeros.Sum() / numeros.Count;
+    }
+    // Metodo para calcular la desviacion estandar de una lista de numeros
+    static double CalcularDesviacionEstandar(List<double> numeros, double media)
+    {
+        double sumatoria = 0;
+        foreach (double numero in numeros)
+        {
+            sumatoria += Math.Pow(numero - media, 2);
+        }
+        double varianza = sumatoria / numeros.Count;
+        return Math.Sqrt(varianza);
+    }
+}
