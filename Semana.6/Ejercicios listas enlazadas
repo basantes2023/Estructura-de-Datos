@@ -1,0 +1,457 @@
+Ejercicio 1. 
+Crear un programa que maneje el registro de los estudiantes de la unidad curricular de Redes III utilizando listas enlazadas. Los estudiantes aprobados deben insertarse por el inicio y los reprobados por el final de la lista. Los datos requeridos por cada estudiante son los siguientes: cédula, nombre, apellido, correo, nota definitiva (Escala: 1-10). El programa debe permitir realizar las operaciones de:
+a.	Agregar estudiante.
+b.	Buscar estudiante por cédula.
+c.	Eliminar un estudiante.
+d.	Total estudiantes aprobados. 
+e.  Total estudiantes reprobados.
+
+
+using System;
+
+namespace RegistroEstudiantes
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            LinkedList studentsList = new LinkedList();
+
+            while (true)
+            {
+                Console.WriteLine("Seleccione una opcion:");
+                Console.WriteLine("1. Agregar estudiante");
+                Console.WriteLine("2. Buscar estudiante por cedula");
+                Console.WriteLine("3. Eliminar un estudiante");
+                Console.WriteLine("4. Total estudiantes aprobados");
+                Console.WriteLine("5. Total estudiantes reprobados");
+                Console.WriteLine("6. Salir");
+
+                int option = int.Parse(Console.ReadLine());
+
+                switch (option)
+                {
+                    case 1:
+                        studentsList.AddStudent();
+                        break;
+                    case 2:
+                        studentsList.SearchByCedula();
+                        break;
+                    case 3:
+                        studentsList.DeleteStudent();
+                        break;
+                    case 4:
+                        studentsList.TotalAprobados();
+                        break;
+                    case 5:
+                        studentsList.TotalReprobados();
+                        break;
+                    case 6:
+                        return;
+                    default:
+                        Console.WriteLine("Opcion no valida.");
+                        break;
+                }
+            }
+        }
+    }
+
+    public class Student
+    {
+        public string Cedula { get; set; }
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
+        public string Correo { get; set; }
+        public double NotaDefinitiva { get; set; }
+        public Student Next { get; set; }
+
+        public Student(string cedula, string nombre, string apellido, string correo, double notaDefinitiva)
+        {
+            Cedula = cedula;
+            Nombre = nombre;
+            Apellido = apellido;
+            Correo = correo;
+            NotaDefinitiva = notaDefinitiva;
+            Next = null;
+        }
+
+        public override string ToString()
+        {
+            return $"Cedula: {Cedula}, Nombre: {Nombre}, Apellido: {Apellido}, Correo: {Correo}, Nota Definitiva: {NotaDefinitiva}";
+        }
+    }
+
+    public class LinkedList
+    {
+        public Student Head { get; private set; }
+
+        public LinkedList()
+        {
+            Head = null;
+        }
+
+        public void AddStudent()
+        {
+            Console.WriteLine("Ingrese la cedula:");
+            string cedula = Console.ReadLine();
+            Console.WriteLine("Ingrese el nombre:");
+            string nombre = Console.ReadLine();
+            Console.WriteLine("Ingrese el apellido:");
+            string apellido = Console.ReadLine();
+            Console.WriteLine("Ingrese el correo:");
+            string correo = Console.ReadLine();
+            Console.WriteLine("Ingrese la nota definitiva (1-10):");
+            double notaDefinitiva = double.Parse(Console.ReadLine());
+
+            Student newStudent = new Student(cedula, nombre, apellido, correo, notaDefinitiva);
+
+            if (notaDefinitiva >= 7)
+            {
+                AddFirst(newStudent);
+                Console.WriteLine("Estudiante aprobado agregado al inicio de la lista.");
+            }
+            else
+            {
+                AddLast(newStudent);
+                Console.WriteLine("Estudiante reprobado agregado al final de la lista.");
+            }
+        }
+
+        private void AddFirst(Student newStudent)
+        {
+            newStudent.Next = Head;
+            Head = newStudent;
+        }
+
+        private void AddLast(Student newStudent)
+        {
+            if (Head == null)
+            {
+                Head = newStudent;
+            }
+            else
+            {
+                Student current = Head;
+                while (current.Next != null)
+                {
+                    current = current.Next;
+                }
+                current.Next = newStudent;
+            }
+        }
+
+        public void SearchByCedula()
+        {
+            Console.WriteLine("Ingrese la cedula del estudiante a buscar:");
+            string cedula = Console.ReadLine();
+
+            Student current = Head;
+            while (current != null)
+            {
+                if (current.Cedula.Equals(cedula, StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine("Estudiante encontrado:");
+                    Console.WriteLine(current);
+                    return;
+                }
+                current = current.Next;
+            }
+            Console.WriteLine("Estudiante no encontrado.");
+        }
+
+        public void DeleteStudent()
+        {
+            Console.WriteLine("Ingrese la cedula del estudiante a eliminar:");
+            string cedula = Console.ReadLine();
+
+            if (Head == null)
+            {
+                Console.WriteLine("No hay estudiantes registrados.");
+                return;
+            }
+
+            if (Head.Cedula.Equals(cedula, StringComparison.OrdinalIgnoreCase))
+            {
+                Head = Head.Next;
+                Console.WriteLine("Estudiante eliminado exitosamente.");
+                return;
+            }
+
+            Student current = Head;
+            while (current.Next != null)
+            {
+                if (current.Next.Cedula.Equals(cedula, StringComparison.OrdinalIgnoreCase))
+                {
+                    current.Next = current.Next.Next;
+                    Console.WriteLine("Estudiante eliminado exitosamente.");
+                    return;
+                }
+                current = current.Next;
+            }
+            Console.WriteLine("Estudiante no encontrado.");
+        }
+
+        public void TotalAprobados()
+        {
+            int count = 0;
+            Student current = Head;
+            while (current != null)
+            {
+                if (current.NotaDefinitiva >=7)
+                {
+                    count++;
+                }
+                current = current.Next;
+            }
+            Console.WriteLine($"Total de estudiantes aprobados: {count}");
+        }
+
+        public void TotalReprobados()
+        {
+            int count = 0;
+            Student current = Head;
+            while (current != null)
+            {
+                if (current.NotaDefinitiva <7)
+                {
+                    count++;
+                }
+                current = current.Next;
+            }
+            Console.WriteLine($"Total de estudiantes reprobados: {count}");
+        }
+
+        public void ShowAllStudents()
+        {
+            if (Head == null)
+            {
+                Console.WriteLine("No hay estudiantes registrados.");
+                return;
+            }
+
+            Student current = Head;
+            while (current != null)
+            {
+                Console.WriteLine(current);
+                current = current.Next;
+            }
+        }
+    }
+}
+
+
+//////////////////
+Ejercicio 2. 
+Crear un programa que permita llevar el registro de los vehículos del estacionamiento del Área de Ingeniería de Sistemas de la Universidad utilizando como estructura de almacenamiento listas enlazadas. Los datos solicitados por cada vehículo son: placa, marca, modelo, año y precio. El programa debe permitir realizar las siguientes operaciones:
+a.	Agregar vehículo.
+b.	Buscar vehículo por placa.
+c.	Ver vehículos por año.
+d.	Ver todos los vehículos registrados.
+e.	Eliminar carro registrado.
+
+
+using System;
+
+namespace Estacionamiento
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            LinkedList vehicles = new LinkedList();
+
+            while (true)
+            {
+                Console.WriteLine("Seleccione una opcion:");
+                Console.WriteLine("1. Agregar vehiculo");
+                Console.WriteLine("2. Buscar vehiculo por placa");
+                Console.WriteLine("3. Ver vehiculos por año");
+                Console.WriteLine("4. Ver todos los vehiculos registrados");
+                Console.WriteLine("5. Eliminar vehiculo registrado");
+                Console.WriteLine("6. Salir");
+
+                int option = int.Parse(Console.ReadLine());
+
+                switch (option)
+                {
+                    case 1:
+                        vehicles.AddVehicle();
+                        break;
+                    case 2:
+                        vehicles.SearchByPlate();
+                        break;
+                    case 3:
+                        vehicles.ViewByYear();
+                        break;
+                    case 4:
+                        vehicles.ViewAll();
+                        break;
+                    case 5:
+                        vehicles.DeleteVehicle();
+                        break;
+                    case 6:
+                        return;
+                    default:
+                        Console.WriteLine("Opcion no valida.");
+                        break;
+                }
+            }
+        }
+    }
+
+    public class Vehicle
+    {
+        public string Plate { get; set; }
+        public string Brand { get; set; }
+        public string Model { get; set; }
+        public int Year { get; set; }
+        public double Price { get; set; }
+        public Vehicle Next { get; set; }
+
+        public Vehicle(string plate, string brand, string model, int year, double price)
+        {
+            Plate = plate;
+            Brand = brand;
+            Model = model;
+            Year = year;
+            Price = price;
+            Next = null;
+        }
+
+        public override string ToString()
+        {
+            return $"Placa: {Plate}, Marca: {Brand}, Modelo: {Model}, Año: {Year}, Precio: {Price}";
+        }
+    }
+
+    public class LinkedList
+    {
+        public Vehicle Head { get; private set; }
+
+        public LinkedList()
+        {
+            Head = null;
+        }
+
+        public void AddVehicle()
+        {
+            Console.WriteLine("Ingrese la placa:");
+            string plate = Console.ReadLine();
+            Console.WriteLine("Ingrese la marca:");
+            string brand = Console.ReadLine();
+            Console.WriteLine("Ingrese el modelo:");
+            string model = Console.ReadLine();
+            Console.WriteLine("Ingrese el año:");
+            int year = int.Parse(Console.ReadLine());
+            Console.WriteLine("Ingrese el precio:");
+            double price = double.Parse(Console.ReadLine());
+
+            Vehicle newVehicle = new Vehicle(plate, brand, model, year, price);
+
+            if (Head == null)
+            {
+                Head = newVehicle;
+            }
+            else
+            {
+                Vehicle current = Head;
+                while (current.Next != null)
+                {
+                    current = current.Next;
+                }
+                current.Next = newVehicle;
+            }
+            Console.WriteLine("Vehículo agregado exitosamente.");
+        }
+
+        public void SearchByPlate()
+        {
+            Console.WriteLine("Ingrese la placa del vehículo a buscar:");
+            string plate = Console.ReadLine();
+
+            Vehicle current = Head;
+            while (current != null)
+            {
+                if (current.Plate.Equals(plate, StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine("Vehículo encontrado:");
+                    Console.WriteLine(current);
+                    return;
+                }
+                current = current.Next;
+            }
+            Console.WriteLine("Vehiculo no encontrado.");
+        }
+
+        public void ViewByYear()
+        {
+            Console.WriteLine("Ingrese el año de los vehiculos a ver:");
+            int year = int.Parse(Console.ReadLine());
+
+            Vehicle current = Head;
+            bool found = false;
+            while (current != null)
+            {
+                if (current.Year == year)
+                {
+                    Console.WriteLine(current);
+                    found = true;
+                }
+                current = current.Next;
+            }
+            if (!found)
+            {
+                Console.WriteLine("No se encontraron vehiculos para el año especificado.");
+            }
+        }
+
+        public void ViewAll()
+        {
+            if (Head == null)
+            {
+                Console.WriteLine("No hay vehiculos registrados.");
+                return;
+            }
+
+            Vehicle current = Head;
+            while (current != null)
+            {
+                Console.WriteLine(current);
+                current = current.Next;
+            }
+        }
+
+        public void DeleteVehicle()
+        {
+            Console.WriteLine("Ingrese la placa del vehiculo a eliminar:");
+            string plate = Console.ReadLine();
+
+            if (Head == null)
+            {
+                Console.WriteLine("No hay vehiculos registrados.");
+                return;
+            }
+
+            if (Head.Plate.Equals(plate, StringComparison.OrdinalIgnoreCase))
+            {
+                Head = Head.Next;
+                Console.WriteLine("Vehiculo eliminado exitosamente.");
+                return;
+            }
+
+            Vehicle current = Head;
+            while (current.Next != null)
+            {
+                if (current.Next.Plate.Equals(plate, StringComparison.OrdinalIgnoreCase))
+                {
+                    current.Next = current.Next.Next;
+                    Console.WriteLine("Vehiculo eliminado exitosamente.");
+                    return;
+                }
+                current = current.Next;
+            }
+            Console.WriteLine("Vehiculo no encontrado.");
+        }
+    }
+}
+
