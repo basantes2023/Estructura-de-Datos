@@ -1,0 +1,58 @@
+///1. Tomando en cuenta la teoría de la clase sobre pilas, resuelva el código en C# la verificación  de una operación matemática se encuentran balanceados: Ej: {7+(8*5)-[(9-7)+(4+1)]} resultado => formula balanceada.
+
+using System;
+using System.Collections.Generic;
+
+public static class Balanceo{
+    //El siguiente código revisa si una fórmula matemática está balanceada en términos de paréntesis, corchetes y llaves.
+
+    public static void Run(){
+                Console.WriteLine("Ingrese una formula:");
+        string formula = Console.ReadLine();
+
+        if (EstaBalanceada(formula)) {
+            Console.WriteLine("Formula Balanceada");
+        } else {
+            Console.WriteLine("Formula NO balanceada");
+        }
+    }
+
+    public static bool EstaBalanceada(string formula) {
+        Stack<char> pila = new Stack<char>();
+        foreach (char c in formula) {
+            
+            // Si se encuentra un paréntesis de apertura, se agrega a la pila
+            if (c == '(' || c == '[' || c == '{') {
+                pila.Push(c);
+            } 
+
+              // Si se encuentra un paréntesis de cierre, se verifica si corresponde al de apertura
+                else if (c == ')' || c == ']' || c == '}') {
+                if (pila.Count == 0) return false;
+                char ultimo = pila.Pop();
+                if (!Coinciden(ultimo, c)) return false;
+            }
+        }
+        
+        // Si la pila está vacía al finalizar, los paréntesis están balanceada
+        return pila.Count == 0;
+    }
+
+    public static bool Coinciden(char apertura, char cierre) {
+        return (apertura == '(' && cierre == ')') ||
+               (apertura == '[' && cierre == ']') ||
+               (apertura == '{' && cierre == '}');
+    }
+}
+
+public class Program {
+    public static void Main() {
+        Balanceo.Run();
+    }
+}
+
+
+
+
+
+
