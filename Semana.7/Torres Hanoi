@@ -1,0 +1,91 @@
+//// 2. Realice un algoritmo en C# y el uso de pilas para resolver el problema de las torres de Hanoi.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public static class Hanoi
+{
+    static Stack<int> torreA = new Stack<int>();
+    static Stack<int> torreB = new Stack<int>();
+    static Stack<int> torreC = new Stack<int>();
+
+
+    /// Método principal que ejecuta la solución del problema de las torres de Hanoi.
+ 
+    public static void Run()
+    {
+        InicializarPila(); // Elimina datos o residuos en las torres
+        Console.Write("Cuantos discos contiene la torre: ");
+        int NumDiscos = int.Parse(Console.ReadLine());
+
+        // For en reversa que almacena los números desde el mayor al menor
+        for (int i = NumDiscos; i >= 1; i--)
+        {
+            torreA.Push(i);
+        }
+        DibujarTorres();
+
+        Resolver(NumDiscos, torreA, torreC, torreB);
+    }
+
+   
+    /// Método recursivo para resolver el problema de las torres de Hanoi.
+ 
+    static void Resolver(int n, Stack<int> origen, Stack<int> destino, Stack<int> auxiliar)
+    {
+        if (n == 1)
+        {
+            MoverDisco(origen, destino);
+            DibujarTorres();
+        }
+        else
+        {
+            // Utilizamos recursividad.
+            Resolver(n - 1, origen, auxiliar, destino);
+            MoverDisco(origen, destino);
+            DibujarTorres();
+            Resolver(n - 1, auxiliar, destino, origen);
+        }
+    }
+
+   
+    /////////// Mueve un disco desde la torre de origen hacia la torre de destino.
+   
+    static void MoverDisco(Stack<int> origen, Stack<int> destino)
+    {
+        // En destino se coloca un nuevo elemento que es el que se elimina en el origen
+        destino.Push(origen.Pop());
+    }
+
+    /////// Dibuja el estado actual de las torres.
+ 
+    static void DibujarTorres()
+    {
+        Console.WriteLine("Estado de las Torres:");
+        Console.WriteLine("Torre A: {0}", string.Join(", ", torreA.Reverse()));
+        Console.WriteLine("Torre B: {0}", string.Join(", ", torreB.Reverse()));
+        Console.WriteLine("Torre C: {0}", string.Join(", ", torreC.Reverse()));
+        Console.WriteLine(new string('*', 30));
+    }
+
+    ////////// Inicializa las pilas de las torres eliminando cualquier contenido previo.
+    
+    static void InicializarPila()
+    {
+        // Utilizamos el método Clear para borrar el contenido de las pilas 
+        torreA.Clear();
+        torreB.Clear();
+        torreC.Clear();
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Hanoi.Run();
+    }
+}
+
+
