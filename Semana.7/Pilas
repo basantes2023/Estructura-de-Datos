@@ -1,4 +1,4 @@
-///1. Tomando en cuenta la teoría de la clase sobre pilas, resuelva el código en C# la verificación  de una operación matemática se encuentran balanceados: Ej: {7+(8*5)-[(9-7)+(4+1)]} resultado => formula balanceada.
+//1. Tomando en cuenta la teoría de la clase sobre pilas, resuelva el código en C# la verificación  de una operación matemática se encuentran balanceados: Ej: {7+(8*5)-[(9-7)+(4+1)]} resultado => formula balanceada.
 
 using System;
 using System.Collections.Generic;
