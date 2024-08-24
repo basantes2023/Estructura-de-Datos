@@ -1,13 +1,13 @@
-//APLICACIÓN OPERACIONES DE CONJUNTOS EN C#. 
-//El Gobierno Nacional a través de su Ministerio de Salud requiere algunos datos sobre la campaña de vacunación para la mitigación del COVID, en tal sentido se necesitan los siguientes datos:
-//Listado de ciudadanos que no se han vacunado
-//Listado de ciudadanos que han recibido las dos vacunas
-//Listado de ciudadanos que solamente han recibido la vacuna de pfizer
-//Listado de ciudadanos que solamente han recibido la vacuna de Astrazeneca 
-//Para resolver el ejercicio considere lo siguiente:
-//Cree un conjunto ficticio de 500 usuarios
-//Cree un conjunto ficticio de 75 usuarios vacunados con pfizer
-//Cree un conjunto ficticio de 75 usuarios vacunados con astrazeneca
+///APLICACIÓN OPERACIONES DE CONJUNTOS EN C#. 
+///El Gobierno Nacional a través de su Ministerio de Salud requiere algunos datos sobre la campaña de vacunación para la mitigación del COVID, en tal sentido se necesitan los siguientes datos:
+///Listado de ciudadanos que no se han vacunado
+///Listado de ciudadanos que han recibido las dos vacunas
+///Listado de ciudadanos que solamente han recibido la vacuna de pfizer
+///Listado de ciudadanos que solamente han recibido la vacuna de Astrazeneca 
+///Para resolver el ejercicio considere lo siguiente:
+///Cree un conjunto ficticio de 500 usuarios
+///Cree un conjunto ficticio de 75 usuarios vacunados con pfizer
+///Cree un conjunto ficticio de 75 usuarios vacunados con astrazeneca
 
 using System;
 using System.Collections.Generic;
