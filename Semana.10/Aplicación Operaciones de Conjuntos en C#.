@@ -1,0 +1,60 @@
+//APLICACIÓN OPERACIONES DE CONJUNTOS EN C#. 
+//El Gobierno Nacional a través de su Ministerio de Salud requiere algunos datos sobre la campaña de vacunación para la mitigación del COVID, en tal sentido se necesitan los siguientes datos:
+//Listado de ciudadanos que no se han vacunado
+//Listado de ciudadanos que han recibido las dos vacunas
+//Listado de ciudadanos que solamente han recibido la vacuna de pfizer
+//Listado de ciudadanos que solamente han recibido la vacuna de Astrazeneca 
+//Para resolver el ejercicio considere lo siguiente:
+//Cree un conjunto ficticio de 500 usuarios
+//Cree un conjunto ficticio de 75 usuarios vacunados con pfizer
+//Cree un conjunto ficticio de 75 usuarios vacunados con astrazeneca
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        // Conjunto de 500 usuarios ficticios
+        HashSet<int> usuarios = new HashSet<int>(Enumerable.Range(1, 500));
+
+        // Conjunto de 75 usuarios vacunados con Pfizer
+        HashSet<int> vacunadosPfizer = new HashSet<int>(Enumerable.Range(1, 75));
+
+        // Conjunto de 75 usuarios vacunados con AstraZeneca
+        HashSet<int> vacunadosAstrazeneca = new HashSet<int>(Enumerable.Range(50, 75)); // 50-124
+
+        // Listado de ciudadanos que no se han vacunado
+        HashSet<int> noVacunados = new HashSet<int>(usuarios);
+        noVacunados.ExceptWith(vacunadosPfizer);
+        noVacunados.ExceptWith(vacunadosAstrazeneca);
+
+        // Listado de ciudadanos que han recibido las dos vacunas
+        HashSet<int> vacunadosAmbos = new HashSet<int>(vacunadosPfizer);
+        vacunadosAmbos.IntersectWith(vacunadosAstrazeneca);
+
+        // Listado de ciudadanos que solamente han recibido la vacuna de Pfizer
+        HashSet<int> soloPfizer = new HashSet<int>(vacunadosPfizer);
+        soloPfizer.ExceptWith(vacunadosAstrazeneca);
+
+        // Listado de ciudadanos que solamente han recibido la vacuna de AstraZeneca
+        HashSet<int> soloAstrazeneca = new HashSet<int>(vacunadosAstrazeneca);
+        soloAstrazeneca.ExceptWith(vacunadosPfizer);
+
+        // Mostrar los resultados
+        Console.WriteLine (“Ministerio de Salud del Ecuador - Datos sobre la campaña de vacunación para la mitigación del COVID.”);
+        Console.WriteLine("Listado de ciudadanos que no se han vacunado:");
+        Console.WriteLine(string.Join(", ", noVacunados));
+
+        Console.WriteLine("\nListado de ciudadanos que han recibido las dos vacunas:");
+        Console.WriteLine(string.Join(", ", vacunadosAmbos));
+
+        Console.WriteLine("\nListado de ciudadanos que solamente han recibido la vacuna de Pfizer:");
+        Console.WriteLine(string.Join(", ", soloPfizer));
+
+        Console.WriteLine("\nListado de ciudadanos que solamente han recibido la vacuna de AstraZeneca:");
+        Console.WriteLine(string.Join(", ", soloAstrazeneca));
+    }
+}
