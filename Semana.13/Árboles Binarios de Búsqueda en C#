@@ -1,0 +1,121 @@
+//// Catálogo de revistas.Utilizando una búsqueda recursiva o búsqueda iterativa para saber si un titulo existe dentro del catálogo 
+
+using System;
+
+class Node
+{
+    public string title;
+    public Node leftChild, rightChild;
+
+    public Node(string title)
+    {
+        this.title = title;
+        leftChild = rightChild = null;
+    }
+}
+
+class MagazineCatalog
+{
+    private Node root;
+
+    public MagazineCatalog()
+    {
+        root = null;
+    }
+
+    // Funcion de insercion principal
+    public void Insert(string title)
+    {
+        if (root == null)
+            root = new Node(title);
+        else
+            InsertHelper(root, title);
+    }
+
+    // Funcion busqueda recursiva de insercion
+    private void InsertHelper(Node node, string title)
+    {
+        if (string.Compare(title, node.title, StringComparison.OrdinalIgnoreCase) < 0)
+        {
+            if (node.leftChild == null)
+                node.leftChild = new Node(title);
+            else
+                InsertHelper(node.leftChild, title);
+        }
+        else
+        {
+            if (node.rightChild == null)
+                node.rightChild = new Node(title);
+            else
+                InsertHelper(node.rightChild, title);
+        }
+    }
+
+    // Busqueda iterativa de un titulo de revista
+    public bool Search(string title)
+    {
+        Node current = root;
+        while (current != null)
+        {
+            int comparison = string.Compare(title, current.title, StringComparison.OrdinalIgnoreCase);
+            if (comparison == 0)
+                return true; // Titulo revista encontrado
+            else if (comparison < 0)
+                current = current.leftChild;
+            else
+                current = current.rightChild;
+        }
+        return false; // Titulo revista no encontrado
+    }
+
+    public void DisplayMenu()
+    {
+        Console.WriteLine("Menu del Catalogo de Revistas:");
+        Console.WriteLine("1.Buscar un titulo");
+        Console.WriteLine("2.Salir");
+    }
+
+    public static void Main(string[] args)
+    {
+        MagazineCatalog catalog = new MagazineCatalog();
+         // Ingreso de 10 titulos de revistas por la consola
+         
+        Console.WriteLine("Ingresar 10 titulos de revistas para el catalogo:");
+               for (int i = 0; i < 10; i++)
+               
+        {
+               Console.Write($"Titulo de la revista {i + 1}: ");
+            string title = Console.ReadLine();
+            catalog.Insert(title);
+        }
+
+        // Menu de busqueda
+        while (true)
+        {
+            catalog.DisplayMenu();
+            Console.Write("Seleccione una opcion: ");
+            if (!int.TryParse(Console.ReadLine(), out int option))
+            {
+                Console.WriteLine("Entrada no valida. Intente de nuevo.");
+                continue;
+            }
+
+            if (option == 2) break;
+
+            if (option == 1)
+            {
+                Console.Write("Ingrese el titulo que desea buscar: ");
+                string searchTitle = Console.ReadLine();
+
+                if (catalog.Search(searchTitle))
+                    Console.WriteLine("Encontrado");
+                else
+                    Console.WriteLine("No encontrado");
+            }
+            else
+            {
+                Console.WriteLine("Opcion no valida. Intente de nuevo.");
+            }
+        }
+    }
+}
