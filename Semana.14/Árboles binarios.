@@ -2,290 +2,284 @@
 
 using System;
 
-public class Nodo
+public static class ArbolBinarioConsola
 {
-    public int Valor { get; set; }
-    public Nodo? LadoIzquierdo { get; set; }
-    public Nodo? LadoDerecho { get; set; }
-
-    public Nodo(int valor)
+    public class Node
     {
-        Valor = valor;
-        LadoIzquierdo = null;
-        LadoDerecho = null;
-    }
-}
+        public int Value;
+        public Node? Left;
+        public Node? Right;
 
-public class ArbolBST
-{
-    public Nodo? raiz;
-
-    public ArbolBST()
-    {
-        raiz = null;
-    }
-
-    public void Insertar(int valor)
-    {
-        raiz = InsertarRecurrente(raiz, valor);
-    }
-
-    private Nodo InsertarRecurrente(Nodo? nodo, int valor)
-    {
-        if (nodo == null)
+        public Node(int value)
         {
-            nodo = new Nodo(valor);
-        }
-        else if (valor < nodo.Valor)
-        {
-            nodo.LadoIzquierdo = InsertarRecurrente(nodo.LadoIzquierdo, valor);
-        }
-        else if (valor > nodo.Valor)
-        {
-            nodo.LadoDerecho = InsertarRecurrente(nodo.LadoDerecho, valor);
-        }
-        return nodo;
-    }
-
-    public void Preorden(Nodo? nodo)
-    {
-        if (nodo != null)
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write(nodo.Valor + " ");
-            Console.ResetColor();
-            Preorden(nodo.LadoIzquierdo);
-            Preorden(nodo.LadoDerecho);
+            Value = value;
+            Left = null;
+            Right = null;
         }
     }
 
-    public void EnOrden(Nodo? nodo)
+    public class ArbolBinario
     {
-        if (nodo != null)
+        public Node? Raiz;
+
+        public void Insertar(int valor)
         {
-            EnOrden(nodo.LadoIzquierdo);
-            
-            Console.Write(nodo.Valor + " ");
-            Console.ResetColor();
-            EnOrden(nodo.LadoDerecho);
+            Raiz = InsertarRecursivo(Raiz, valor);
         }
-    }
 
-    public void Postorden(Nodo? nodo)
-    {
-        if (nodo != null)
+        private Node InsertarRecursivo(Node? raiz, int valor)
         {
-            Postorden(nodo.LadoIzquierdo);
-            Postorden(nodo.LadoDerecho);
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write(nodo.Valor + " ");
-            Console.ResetColor();
-        }
-    }
-
-    public void Graficar(Nodo? nodo, string espacio = "", bool esLadoDerecho = false)
-    {
-        if (nodo != null)
-        {
-            string prefijo = espacio + (esLadoDerecho ? "├──" : "└──");
-
-            Console.ForegroundColor = esLadoDerecho ? ConsoleColor.Green : ConsoleColor.Black;
-            Console.WriteLine(prefijo + nodo.Valor);
-            Console.ResetColor();
-
-            Graficar(nodo.LadoIzquierdo, espacio + (esLadoDerecho ? "│   " : "    "), true);
-            Graficar(nodo.LadoDerecho, espacio + (esLadoDerecho ? "│   " : "    "), false);
-        }
-    }
-
-    public bool Buscar(int valor)
-    {
-        return BuscarRecurrente(raiz, valor);
-    }
-
-    private bool BuscarRecurrente(Nodo? nodo, int valor)
-    {
-        if (nodo == null)
-            return false;
-        if (nodo.Valor == valor)
-            return true;
-        return valor < nodo.Valor ? BuscarRecurrente(nodo.LadoIzquierdo, valor) : BuscarRecurrente(nodo.LadoDerecho, valor);
-    }
-
-    public void Eliminar(int valor)
-    {
-        raiz = EliminarRecurrente(raiz, valor);
-    }
-
-    private Nodo? EliminarRecurrente(Nodo? nodo, int valor)
-    {
-        if (nodo == null) return nodo;
-
-        if (valor < nodo.Valor)
-            nodo.LadoIzquierdo = EliminarRecurrente(nodo.LadoIzquierdo, valor);
-        else if (valor > nodo.Valor)
-            nodo.LadoDerecho = EliminarRecurrente(nodo.LadoDerecho, valor);
-        else
-        {
-            // Nodo con un solo hijo o sin hijos
-            if (nodo.LadoIzquierdo == null)
-                return nodo.LadoDerecho;
-            else if (nodo.LadoDerecho == null)
-                return nodo.LadoIzquierdo;
-
-            // Nodo con dos hijos: obtener el sucesor más pequeño
-            nodo.Valor = ObtenerMinimo(nodo.LadoDerecho);
-            nodo.LadoDerecho = EliminarRecurrente(nodo.LadoDerecho, nodo.Valor);
-        }
-        return nodo;
-    }
-
-    private int ObtenerMinimo(Nodo nodo)
-    {
-        while (nodo.LadoIzquierdo != null)
-            nodo = nodo.LadoIzquierdo;
-        return nodo.Valor;
-    }
-
-    public int ObtenerMinimoValor()
-    {
-        if (raiz == null)
-            throw new InvalidOperationException("El arbol esta vacio.");
-        return ObtenerMinimo(raiz);
-    }
-
-    public int ObtenerMaximoValor()
-    {
-        if (raiz == null)
-            throw new InvalidOperationException("El arbol esta vacio.");
-        return ObtenerMaximo(raiz);
-    }
-
-    private int ObtenerMaximo(Nodo nodo)
-    {
-        while (nodo.LadoDerecho != null)
-            nodo = nodo.LadoDerecho;
-        return nodo.Valor;
-    }
-}
-
-public class Program
-{
-    public static void Main()
-    {
-        ArbolBST bst = new ArbolBST();
-        bool continuar = true;
-
-        while (continuar)
-        {
-            Console.WriteLine("\n--- Menu Arbol Binario de Busqueda ---");
-            Console.WriteLine("1. Insertar un numero");
-            Console.WriteLine("2. Buscar un numero");
-            Console.WriteLine("3. Eliminar un numero");
-            Console.WriteLine("4. Mostrar Pre-Orden");
-            Console.WriteLine("5. Mostrar In-Orden");
-            Console.WriteLine("6. Mostrar Post-Orden");
-            Console.WriteLine("7. Mostrar el valor minimo");
-            Console.WriteLine("8. Mostrar el valor maximo");
-            Console.WriteLine("9. Impresion jerarquica");
-            Console.WriteLine("10. Salir");
-            Console.Write("Seleccione una opcion: ");
-            string? opcion = Console.ReadLine();
-
-            switch (opcion)
+            if (raiz == null)
             {
-                case "1":
-                    Console.Write("Ingrese un numero a insertar: ");
-                    if (int.TryParse(Console.ReadLine(), out int valor))
-                    {
-                        bst.Insertar(valor);
-                        Console.WriteLine($"Numero {valor} insertado.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Numero invalido.");
-                    }
-                    break;
+                return new Node(valor);
+            }
 
-                case "2":
-                    Console.Write("Ingrese un numero a buscar: ");
-                    if (int.TryParse(Console.ReadLine(), out valor))
-                    {
-                        Console.WriteLine(bst.Buscar(valor) ? "Numero encontrado." : "Numero no encontrado.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Numero invalido.");
-                    }
-                    break;
+            if (valor < raiz.Value)
+            {
+                raiz.Left = InsertarRecursivo(raiz.Left, valor);
+            }
+            else if (valor > raiz.Value) // Se evita la duplicación de valores.
+            {
+                raiz.Right = InsertarRecursivo(raiz.Right, valor);
+            }
 
-                case "3":
-                    Console.Write("Ingrese un numero a eliminar: ");
-                    if (int.TryParse(Console.ReadLine(), out valor))
-                    {
-                        bst.Eliminar(valor);
-                        Console.WriteLine($"Numero {valor} eliminado.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Numero invalido.");
-                    }
-                    break;
+            return raiz;
+        }
 
-                case "4":
-                    Console.WriteLine("Recorrido Preorden:");
-                    bst.Preorden(bst.raiz);
-                    Console.WriteLine();
-                    break;
+        public Node? Buscar(int valor)
+        {
+            return BuscarRecursivo(Raiz, valor);
+        }
 
-                case "5":
-                    Console.WriteLine("Recorrido InOrden:");
-                    bst.EnOrden(bst.raiz);
-                    Console.WriteLine();
-                    break;
+        private Node? BuscarRecursivo(Node? raiz, int valor)
+        {
+            if (raiz == null || raiz.Value == valor)
+            {
+                return raiz;
+            }
 
-                case "6":
-                    Console.WriteLine("Recorrido Postorden:");
-                    bst.Postorden(bst.raiz);
-                    Console.WriteLine();
-                    break;
+            if (valor < raiz.Value)
+            {
+                return BuscarRecursivo(raiz.Left, valor);
+            }
+            else
+            {
+                return BuscarRecursivo(raiz.Right, valor);
+            }
+        }
 
-                case "7":
-                    try
-                    {
-                        Console.WriteLine($"Valor minimo: {bst.ObtenerMinimoValor()}");
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                    break;
+        public void Eliminar(int valor)
+        {
+            Raiz = EliminarRecursivo(Raiz, valor);
+        }
 
-                case "8":
-                    try
-                    {
-                        Console.WriteLine($"Valor maximo: {bst.ObtenerMaximoValor()}");
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                    break;
+        private Node? EliminarRecursivo(Node? raiz, int valor)
+        {
+            if (raiz == null) return null;
 
-                case "9":
-                    Console.WriteLine("Arbol Binario de manera jerarquica:");
-                    bst.Graficar(bst.raiz);
-                    Console.WriteLine();
-                    break;
+            if (valor < raiz.Value)
+            {
+                raiz.Left = EliminarRecursivo(raiz.Left, valor);
+            }
+            else if (valor > raiz.Value)
+            {
+                raiz.Right = EliminarRecursivo(raiz.Right, valor);
+            }
+            else
+            {
+                if (raiz.Left == null)
+                    return raiz.Right;
+                else if (raiz.Right == null)
+                    return raiz.Left;
 
-                case "10":
-                    continuar = false;
-                    break;
+                raiz.Value = MinValue(raiz.Right);
+                raiz.Right = EliminarRecursivo(raiz.Right, raiz.Value);
+            }
 
-                default:
-                    Console.WriteLine("Opcion no valida. Intente nuevamente.");
-                    break;
+            return raiz;
+        }
+
+        public int MinValue(Node raiz)
+        {
+            int minValue = raiz.Value;
+            while (raiz.Left != null)
+            {
+                minValue = raiz.Left.Value;
+                raiz = raiz.Left;
+            }
+            return minValue;
+        }
+
+        public int MaxValue(Node raiz)
+        {
+            int maxValue = raiz.Value;
+            while (raiz.Right != null)
+            {
+                maxValue = raiz.Right.Value;
+                raiz = raiz.Right;
+            }
+            return maxValue;
+        }
+
+        public void RecorridoPreOrden(Node? raiz)
+        {
+            if (raiz != null)
+            {
+                Console.Write(raiz.Value + " ");
+                RecorridoPreOrden(raiz.Left);
+                RecorridoPreOrden(raiz.Right);
+            }
+        }
+
+        public void RecorridoInOrden(Node? raiz)
+        {
+            if (raiz != null)
+            {
+                RecorridoInOrden(raiz.Left);
+                Console.Write(raiz.Value + " ");
+                RecorridoInOrden(raiz.Right);
+            }
+        }
+
+        public void RecorridoPostOrden(Node? raiz)
+        {
+            if (raiz != null)
+            {
+                RecorridoPostOrden(raiz.Left);
+                RecorridoPostOrden(raiz.Right);
+                Console.Write(raiz.Value + " ");
+            }
+        }
+
+        public void ImprimirJerarquico(Node? raiz, string sangria = "", bool esUltimo = true)
+        {
+            if (raiz != null)
+            {
+                Console.Write(sangria);
+
+                if (esUltimo)
+                {
+                    Console.Write("└─");
+                    sangria += "  ";
+                }
+                else
+                {
+                    Console.Write("├─");
+                    sangria += "| ";
+                }
+
+                Console.WriteLine(raiz.Value);
+
+                ImprimirJerarquico(raiz.Left, sangria, false);
+                ImprimirJerarquico(raiz.Right, sangria, true);
+            }
+        }
+    }
+
+    public static void Run()
+    {
+        ArbolBinario miArbol = new ArbolBinario();
+
+        while (true)
+        {
+            try
+            {
+                Console.WriteLine("\n--- Menu Arbol Binario de Busqueda ---");
+                Console.WriteLine("1. Insertar un numero");
+                Console.WriteLine("2. Buscar numero");
+                Console.WriteLine("3. Eliminar numero");
+                Console.WriteLine("4. Recorrido Pre-Orden");
+                Console.WriteLine("5. Recorrido In-Orden");
+                Console.WriteLine("6. Recorrido Post-Orden");
+                Console.WriteLine("7. Mostrar valor manimo");
+                Console.WriteLine("8. Mostrar valor maximo");
+                Console.WriteLine("9. Imprimir arbol jerarquico");
+                Console.WriteLine("10. Salir");
+                Console.Write("Elige una opcion: ");
+                int opcion = Convert.ToInt32(Console.ReadLine());
+
+                switch (opcion)
+                {
+                    case 1:
+                        Console.Write("Ingrese el numero a insertar: ");
+                        int valorInsertar = Convert.ToInt32(Console.ReadLine());
+                        miArbol.Insertar(valorInsertar);
+                        Console.WriteLine($"Numero {valorInsertar} insertado correctamente.");
+                        break;
+
+                    case 2:
+                        Console.Write("Ingrese numero a buscar: ");
+                        int valorBuscar = Convert.ToInt32(Console.ReadLine());
+                        Node? nodoBuscado = miArbol.Buscar(valorBuscar);
+                        Console.WriteLine(nodoBuscado != null ? $"Numero {valorBuscar} encontrado." : $"Numero {valorBuscar} no encontrado.");
+                        break;
+
+                    case 3:
+                        Console.Write("Ingrese numero a eliminar: ");
+                        int valorEliminar = Convert.ToInt32(Console.ReadLine());
+                        miArbol.Eliminar(valorEliminar);
+                        Console.WriteLine($"Numero {valorEliminar} eliminado.");
+                        break;
+
+                    case 4:
+                        Console.WriteLine("Recorrido Pre-Orden:");
+                        miArbol.RecorridoPreOrden(miArbol.Raiz);
+                        Console.WriteLine();
+                        break;
+
+                    case 5:
+                        Console.WriteLine("Recorrido In-Orden:");
+                        miArbol.RecorridoInOrden(miArbol.Raiz);
+                        Console.WriteLine();
+                        break;
+
+                    case 6:
+                        Console.WriteLine("Recorrido Post-Orden:");
+                        miArbol.RecorridoPostOrden(miArbol.Raiz);
+                        Console.WriteLine();
+                        break;
+
+                    case 7:
+                        if (miArbol.Raiz != null)
+                            Console.WriteLine("Valor minimo: " + miArbol.MinValue(miArbol.Raiz));
+                        else
+                            Console.WriteLine("El arbol esta vacio.");
+                        break;
+
+                    case 8:
+                        if (miArbol.Raiz != null)
+                            Console.WriteLine("Valor maximo: " + miArbol.MaxValue(miArbol.Raiz));
+                        else
+                            Console.WriteLine("El arbol esta vacio.");
+                        break;
+
+                    case 9:
+                        Console.WriteLine("Impresion jerarquica del arbol:");
+                        miArbol.ImprimirJerarquico(miArbol.Raiz);
+                        break;
+
+                    case 10:
+                        Console.WriteLine("Saliendo del programa.");
+                        return;
+
+                    default:
+                        Console.WriteLine("Opcion invalida. Intente de nuevo.");
+                        break;
+                }
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Error: Por favor, ingrese un numero válido.");
             }
         }
     }
 }
+
+class Program
+{
+    static void Main()
+    {
+        ArbolBinarioConsola.Run();
+    }
+}
+
